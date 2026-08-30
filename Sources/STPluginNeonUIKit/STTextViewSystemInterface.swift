@@ -25,15 +25,10 @@ class STTextViewSystemInterface: TextSystemInterface {
         // does this for headings, links, and inline markup). Keep syntax
         // styling in the backing attributed string instead; character edits
         // are still the only changes observed by the plugin event pipeline.
-        var attributes: [NSAttributedString.Key: Any] = [:]
-        if let font = textView.font {
-            attributes[.font] = font
-        }
-        if let color = textView.textColor {
-            attributes[.foregroundColor] = color
-        }
-        guard !attributes.isEmpty else { return }
-        textView.addAttributes(attributes, range: range)
+        textView.addAttributes([
+            .font: textView.font,
+            .foregroundColor: textView.textColor,
+        ], range: range)
     }
 
     func applyStyle(to token: Neon.Token) {
@@ -43,8 +38,7 @@ class STTextViewSystemInterface: TextSystemInterface {
             return
         }
 
-        // Keep only concrete UIKit values. A boxed Optional.none is accepted
-        // by Swift's `[Key: Any]` but crashes inside NSAttributedString.
+        // Keep only the concrete attribute types supported by this adapter.
         var safeAttributes: [NSAttributedString.Key: Any] = [:]
         if let color = attrs[.foregroundColor] as? UIColor {
             safeAttributes[.foregroundColor] = color

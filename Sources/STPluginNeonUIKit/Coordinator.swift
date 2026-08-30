@@ -41,12 +41,10 @@ public class Coordinator {
 
         highlighter = Neon.Highlighter(textInterface: STTextViewSystemInterface(textView: textView) { neonToken in
             var attributes: [NSAttributedString.Key: Any] = [:]
-            // STTextView exposes UIKit's implicitly-unwrapped optional font.
-            // Never bridge a nil optional through `Any`: UIFoundation aborts
-            // when it receives that value as an attributed-string attribute.
-            if let font = textView.font {
-                attributes[.font] = font
-            }
+            // STTextView 2.3 exposes a concrete UIFont. Keep the base font in
+            // every token application so removing an italic/bold capture also
+            // restores the editor's configured font.
+            attributes[.font] = textView.font
 
             if let themeColor = theme.color(forToken: TokenName(neonToken.name)) {
                 attributes[.foregroundColor] = themeColor
