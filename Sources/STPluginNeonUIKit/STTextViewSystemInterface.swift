@@ -15,29 +15,30 @@ class STTextViewSystemInterface: TextSystemInterface {
     }
 
     func clearStyle(in range: NSRange) {
-        guard let textRange = NSTextRange(range, in: textView.textContentManager) else {
+        guard NSTextRange(range, in: textView.textContentManager) != nil else {
             assertionFailure()
             return
         }
 
-        textView.textLayoutManager.removeRenderingAttribute(.foregroundColor, for: textRange)
-        textView.addAttributes([.font: textView.font], range: range)
+        // NSTextLayoutManager's temporary rendering attributes crash on iOS
+        // when Tree-sitter returns overlapping captures (Markdown commonly
+        // does this for headings, links, and inline markup). Keep syntax
+        // styling in the backing attributed string instead; character edits
+        // are still the only changes observed by the plugin event pipeline.
+        textView.addAttributes([
+            .font: textView.font,
+            .foregroundColor: textView.textColor,
+        ], range: range)
     }
 
     func applyStyle(to token: Neon.Token) {
         guard let attrs = attributeProvider(token),
-              let textRange = NSTextRange(token.range, in: textView.textContentManager)
+              NSTextRange(token.range, in: textView.textContentManager) != nil
         else {
             return
         }
 
-        for attr in attrs {
-            if attr.key == .foregroundColor {
-                textView.textLayoutManager.addRenderingAttribute(.foregroundColor, value: attr.value, for: textRange)
-            } else {
-                textView.addAttributes([attr.key: attr.value], range: token.range)
-            }
-        }
+        textView.addAttributes(attrs, range: token.range)
     }
 
     var length: Int {
