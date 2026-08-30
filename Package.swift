@@ -84,6 +84,8 @@ let package = Package(
                 .target(name: "TreeSitterTOMLQueries"),
                 .target(name: "TreeSitterTypeScript"),
                 .target(name: "TreeSitterTypeScriptQueries"),
+                .target(name: "TreeSitterTSX"),
+                .target(name: "TreeSitterTSXQueries"),
                 .target(name: "TreeSitterYAML"),
                 .target(name: "TreeSitterYAMLQueries")            
             ]

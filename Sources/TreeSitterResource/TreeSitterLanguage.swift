@@ -40,6 +40,8 @@ import TreeSitterTOML
 import TreeSitterTOMLQueries
 import TreeSitterTypeScript
 import TreeSitterTypeScriptQueries
+import TreeSitterTSX
+import TreeSitterTSXQueries
 import TreeSitterYAML
 import TreeSitterYAMLQueries
 
@@ -63,6 +65,7 @@ public enum TreeSitterLanguage: CaseIterable, Hashable {
     case sql
     case toml
     case typescript
+    case tsx
     case yaml
 
     public var parser: OpaquePointer {
@@ -105,6 +108,8 @@ public enum TreeSitterLanguage: CaseIterable, Hashable {
             tree_sitter_toml()
         case .typescript:
             tree_sitter_typescript()
+        case .tsx:
+            tree_sitter_tsx()
         case .yaml:
             tree_sitter_yaml()
         }
@@ -150,6 +155,8 @@ public enum TreeSitterLanguage: CaseIterable, Hashable {
             TreeSitterTOMLQueries.Query.highlightsFileURL
         case .typescript:
             TreeSitterTypeScriptQueries.Query.highlightsFileURL
+        case .tsx:
+            TreeSitterTSXQueries.Query.highlightsFileURL
         case .yaml:
             TreeSitterYAMLQueries.Query.highlightsFileURL
         }
@@ -195,6 +202,8 @@ public enum TreeSitterLanguage: CaseIterable, Hashable {
             nil
         case .typescript:
             TreeSitterTypeScriptQueries.Query.localsFileURL
+        case .tsx:
+            TreeSitterTSXQueries.Query.localsFileURL
         case .yaml:
             nil
         }
